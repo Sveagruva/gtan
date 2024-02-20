@@ -11,12 +11,23 @@ func Transfer(source Location, destination Location) error {
 		return errors.New("rsync is not installed or not in the PATH")
 	}
 
+	if err := exec.Command("sshpass").Run(); err != nil {
+		return errors.New("sshpass is not installed or not in the PATH")
+	}
+
 	if !source.IsLocal && !destination.IsLocal {
 		return errors.New("todo: move between servers")
 	}
 
-	// todo: password
-	rsync := exec.Command("rsync", "-ravzP", source.RsyncString(), destination.RsyncString())
+	var password = ""
+	if source.IsLocal {
+		password = destination.Server.Password
+	} else {
+		password = source.Server.Password
+	}
+
+	rsync := exec.Command("sshpass", "-eRSYNC_PASSWORD", "rsync", "-ravzhP", source.RsyncString(), destination.RsyncString())
+	rsync.Env = append(os.Environ(), "RSYNC_PASSWORD="+password)
 	println(rsync.String())
 
 	rsync.Stdout = os.Stdout
