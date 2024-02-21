@@ -25,6 +25,7 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(TransferCmd)
+	rootCmd.AddCommand(EnterCmd)
 	rootCmd.AddCommand(LsCmd)
 	rootCmd.AddCommand(AddHostCmd)
 	rootCmd.AddCommand(RemoveHostCmd)
