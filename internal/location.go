@@ -53,6 +53,10 @@ func ParseLocation(location string) (Location, error) {
 	if len(usernameParts) == 1 {
 		serverName := pathParts[0]
 
+		if serverName == "local" {
+			return Location{path, true, Server{}}, nil
+		}
+
 		for name, server := range UserData.Servers {
 			if name == serverName {
 				return Location{path, false, server}, nil
